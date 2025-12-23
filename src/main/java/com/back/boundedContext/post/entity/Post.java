@@ -1,7 +1,8 @@
-package com.back.entity;
+package com.back.boundedContext.post.entity;
 
 
-import com.back.jpa.entity.BaseIdAndTime;
+import com.back.boundedContext.member.entity.Member;
+import com.back.global.jpa.entity.BaseIdAndTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -18,17 +19,11 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @NoArgsConstructor
 public class Post extends BaseIdAndTime {
-    // Post : Member = N : 1
-    // LAZY : 지연로딩, 필요할 때 DB에서 조회
-    // EAGER : 즉시로딩, Post 조회 시 Member도 무조건 같이 Join해서 조회
     @ManyToOne(fetch = LAZY)
     private Member author;
-
     private String title;
-
     @Column(columnDefinition = "LONGTEXT")
     private String content;
-
     @OneToMany(mappedBy = "post", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     private List<PostComment> comments = new ArrayList<>();
 
@@ -42,6 +37,8 @@ public class Post extends BaseIdAndTime {
         PostComment postComment = new PostComment(this, author, content);
 
         comments.add(postComment);
+
+        author.increaseActivityScore(1);
 
         return postComment;
     }
