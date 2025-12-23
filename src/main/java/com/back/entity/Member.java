@@ -3,12 +3,10 @@ package com.back.entity;
 import com.back.jpa.entity.BaseIdAndTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@Getter
 public class Member extends BaseIdAndTime {
     @Column(unique = true)
     private String username;
