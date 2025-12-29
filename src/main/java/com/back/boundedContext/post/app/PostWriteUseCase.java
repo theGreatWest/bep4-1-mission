@@ -18,11 +18,7 @@ public class PostWriteUseCase {
     public Post write(Member author, String title, String content) {
         Post post = postRepository.save(new Post(author, title, content));
 
-        eventPublisher.publish(
-                new PostCreatedEvent(
-                        new PostDto(post)
-                )
-        );
+        eventPublisher.publish(new PostCreatedEvent(new PostDto(post)));
 
         return post;
     }
