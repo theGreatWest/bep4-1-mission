@@ -31,8 +31,7 @@ public class PostWriteUseCase {
 
         return new RsData<>(
                 "201-1",
-                "%d번 글이 생성되었습니다. 보안 팁 : %s"
-                        .formatted(post.getId(), randomSecureTip),
+                "%d번 글이 생성되었습니다. 보안 팁 : %s".formatted(post.getId(), randomSecureTip),
                 post
         );
     }
