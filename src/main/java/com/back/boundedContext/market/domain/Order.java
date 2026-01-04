@@ -36,9 +36,24 @@ public class Order extends BaseIdAndTime {
 
     public Order(Cart cart) {
         this.buyer = cart.getBuyer();
+
         cart.getItems().forEach(item -> {
             addItem(item.getProduct());
         });
+    }
+
+    public OrderDto toDto() {
+        return new OrderDto(
+                getId(),
+                getCreateDate(),
+                getModifyDate(),
+                buyer.getId(),
+                buyer.getNickname(),
+                price,
+                salePrice,
+                requestPaymentDate,
+                paymentDate
+        );
     }
 
     public void addItem(Product product) {
@@ -49,7 +64,9 @@ public class Order extends BaseIdAndTime {
                 product.getPrice(),
                 product.getSalePrice()
         );
+
         items.add(orderItem);
+
         price += product.getPrice();
         salePrice += product.getSalePrice();
     }
@@ -62,11 +79,20 @@ public class Order extends BaseIdAndTime {
         return paymentDate != null;
     }
 
+    public boolean isCanceled() {
+        return cancelDate != null;
+    }
+
+    public boolean isPaymentInProgress() {
+        return requestPaymentDate != null && paymentDate == null && cancelDate == null;
+    }
+
     public void requestPayment(long pgPaymentAmount) {
         requestPaymentDate = LocalDateTime.now();
+
         publishEvent(
                 new MarketOrderPaymentRequestedEvent(
-                        new OrderDto(this),
+                        toDto(),
                         pgPaymentAmount
                 )
         );
@@ -74,13 +100,5 @@ public class Order extends BaseIdAndTime {
 
     public void cancelRequestPayment() {
         requestPaymentDate = null;
-    }
-
-    public boolean isCanceled() {
-        return cancelDate != null;
-    }
-
-    public boolean isPaymentInProgress() {
-        return requestPaymentDate != null && paymentDate == null && cancelDate == null;
     }
 }
