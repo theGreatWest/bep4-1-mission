@@ -17,15 +17,15 @@ public class PostCommentDto {
     private final String authorName;
     private final String content;
 
-    public PostCommentDto(PostComment post) {
+    public PostCommentDto(PostComment postComment) {
         this(
-                post.getId(),
-                post.getCreateDate(),
-                post.getModifyDate(),
-                post.getId(),
-                post.getAuthor().getId(),
-                post.getAuthor().getNickname(),
-                post.getContent()
+                postComment.getId(),
+                postComment.getCreateDate(),
+                postComment.getModifyDate(),
+                postComment.getPost().getId(),
+                postComment.getAuthor().getId(),
+                postComment.getAuthor().getNickname(),
+                postComment.getContent()
         );
     }
 }
